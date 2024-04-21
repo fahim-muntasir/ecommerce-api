@@ -1,0 +1,1429 @@
+openapi: 3.0.1
+
+info:
+  title: E-commerce application REST API
+  description: This is E-commerce application rest api..
+  termsOfService: http://example.com
+  contact:
+    name: Fahim muntasir
+    url: exampleurl.com
+    email: example@example.com
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:4000/api/v1
+    description: this is development server
+
+tags:
+  - name: Auth
+    description: Auth endpoint (public)
+  - name: Users
+    description: Users endpoint (public + private)
+  - name: Product
+    description: Product endpoint (public + private)
+  - name: Cart
+    description: Cart endpoint (private)
+  - name: Order
+    description: Order endpoint (private)
+
+paths:
+  /auth/signin:
+    post:
+      tags:
+        - Auth
+      summary: This is auth endpoint
+      description: Each registard user will be able to signin by this endpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: example@example.com
+                password:
+                  type: string
+                  example: 123
+              required: [email, password]
+
+      responses:
+        "200":
+          description: SignIn successfull
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    type: object
+                    properties:
+                      token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /users/1
+        "400":
+          $ref: "#/components/responses/400"
+
+        "500":
+          $ref: "#/components/responses/500"
+
+  /users:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: This is get user endpoint
+      description: You can get all users by this endpoint. For this endpoint you need to pass some query data otherewise you will get default response.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: number
+            example: 1
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: number
+            example: 10
+            default: 10
+        - in: query
+          name: sortType
+          schema:
+            type: string
+            enum: [desc, asc]
+            default: desc
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [createdAt, updatedAt, name]
+            default: createdAt
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Users"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /api/v1/users
+                      nextPage:
+                        type: string
+                        example: /api/v1/users?page=3
+                      prevPage:
+                        type: string
+                        example: /api/v1/users?page=1
+                      articles:
+                        type: string
+                        example: /api/v1/atricles
+                    required: [self]
+        "401":
+          $ref: "#/components/responses/401"
+          
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: This is create user endpoint
+      description: You cate create users by this endpoint.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: fahim
+                email:
+                  type: string
+                  example: example@example.com
+                password:
+                  type: string
+                  example: 123
+
+      responses:
+        "201":
+          description: User create successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 201
+                  data:
+                    $ref: "#/components/schemas/Users"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: /users/1
+  
+        "400":
+          $ref: "#/components/responses/400"
+          
+        "401":
+          $ref: "#/components/responses/401"
+          
+        "500":
+          $ref: "#/components/responses/500"
+
+  /users/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Get a single user
+      description: You can get a single user by user id
+      parameters:
+        - name: id
+          in: path
+          description: User Id
+          required: true
+          schema:
+            type: string
+            example: "15a458e556"
+
+      responses:
+        "200":
+          description: Successfull operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Users"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        format: url
+                        example: "/users/1"
+                required: [code, data, links]
+        "401":
+          $ref: "#/components/responses/401"
+          
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: This is updated user endpoint
+      description: You can update a single user by user id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User Id
+          schema:
+            type: string
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: fahim
+                email:
+                  type: string
+                  example: example@example.com
+      responses:
+        "200":
+          description: User updated successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Users"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /users/1
+
+        "400":
+          $ref: "#/components/responses/400"
+
+        "401":
+          $ref: "#/components/responses/401"
+
+        "500":
+          $ref: "#/components/responses/500"
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: This is delete user endpoint
+      description: You can delete user by user id
+      parameters:
+        - name: id
+          in: path
+          description: User Id
+          required: true
+          schema:
+            type: string
+            example: 1
+      responses:
+        "200":
+          description: deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Users"
+                required: [code, data]
+
+        "401":
+          $ref: "#/components/responses/401"
+
+        "404":
+          $ref: "#/components/responses/404"
+
+        "500":
+          $ref: "#/components/responses/500"
+
+  /products:
+    get:
+      tags:
+        - Product
+      summary: Get products
+      description: Retrieve a list of products with optional pagination, sorting, filtering, and search functionality.
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            example: 2
+            default: 1
+          description: Page number for pagination
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            example: 10
+            default: 10
+          description: Number of products per page
+        - name: sortType
+          in: query
+          schema:
+            type: string
+            enum: [desc, asc]
+            default: desc
+          description: Sorting order (ascending or descending)
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [updatedAt, title, price]
+            default: updatedAt
+          description: Field to sort by
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive]
+            default: active
+          description: Product status
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search query for products
+
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /products
+                      nextPage:
+                        type: string
+                        example: /products?page=2
+                      prevPage:
+                        type: string
+                        example: /products?page=1
+        "500":
+          $ref: "#/components/responses/500"
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Product
+      summary: Create a product
+      description: Create a new product using this endpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Product Title
+                avatar:
+                  type: string
+                  example: https://avatar.com/avatar
+                status:
+                  type: string
+                  enum: [active, inactive]
+                  example: active
+                price:
+                  type: number
+                  example: 29.99
+                description:
+                  type: string
+                  example: Product Description
+                category:
+                  type: string
+                  example: Electronics
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  example: ["electronics", "gadget"]
+              required: [title, status, price, description, category]
+    
+      responses:
+        "201":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 201
+                  data:
+                    $ref: "#/components/schemas/Product"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /products/1
+                      category:
+                        type: string
+                        example: /categories/1
+                      tags:
+                        type: string
+                        example: /products/1/tags
+                    required: [self, category, tags]
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+  
+  /users/{id}/orders:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Get all orders of a single user
+      description: Retrieve a list of a single user all orders
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            example: 2
+            default: 1
+          description: Page number for pagination
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            example: 10
+            default: 10
+          description: Number of products per page
+        - name: sortType
+          in: query
+          schema:
+            type: string
+            enum: [desc, asc]
+            default: desc
+          description: Sorting order (ascending or descending)
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [updatedAt, title, price]
+            default: updatedAt
+          description: Field to sort by
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [Pending, Paid, Failed]
+          description: Product status
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search query for products
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Order"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /orders
+                      nextPage:
+                        type: string
+                        example: /api/v1/users/123/orders?page=3
+                      prevPage:
+                        type: string
+                        example: /api/v1/users/123/orders?page=1
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+
+  /products/{id}:
+    get:
+      tags:
+        - Product
+      summary: Get a single product
+      description: Retrieve details of a single product by its ID
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+    
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Product"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /products/1
+                      category:
+                        type: string
+                        example: /categories/1
+                      tags:
+                        type: string
+                        example: /products/1/tags
+                    required: [self, category, tags]
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Product
+      summary: Update a product
+      description: Update an existing product by its ID
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+    
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: Updated Product Title
+                status:
+                  type: string
+                  enum: [active, inactive]
+                  example: active
+                price:
+                  type: number
+                  example: 39.99
+                description:
+                  type: string
+                  example: Updated Product Description
+                category:
+                  type: string
+                  example: Electronics
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  example: ["electronics", "updated"]
+    
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Product"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /products/1
+                      category:
+                        type: string
+                        example: /categories/1
+                      tags:
+                        type: string
+                        example: /products/1/tags
+                    required: [self, category, tags]
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Product
+      summary: Delete a product
+      description: Delete an existing product by its ID
+      parameters:
+        - name: id
+          in: path
+          description: Product ID
+          required: true
+          schema:
+            type: string
+    
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Product"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  
+  /carts:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Cart
+      summary: Get all carts
+      description: Retrieve a list of all carts
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Cart"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /carts
+                      nextPage:
+                        type: string
+                        example: /api/v1/carts?page=3
+                      prevPage:
+                        type: string
+                        example: /api/v1/carts?page=1
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Cart
+      summary: Create a cart
+      description: Create a new cart
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Product"
+      responses:
+        "201":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 201
+                  data:
+                    $ref: "#/components/schemas/Cart"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /carts/1
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+
+  /carts/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: Cart ID
+        required: true
+        schema:
+          type: string
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Cart
+      summary: Get a single cart
+      description: Retrieve details of a single cart by its ID
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Cart"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /carts/1
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Cart
+      summary: Update a cart
+      description: Update an existing cart by its ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/Product"
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Cart"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /carts/1
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Cart
+      summary: Delete a cart
+      description: Delete an existing cart by its ID
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Cart"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+  /orders:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Order
+      summary: Get all orders
+      description: Retrieve a list of all orders
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            example: 2
+            default: 1
+          description: Page number for pagination
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            example: 10
+            default: 10
+          description: Number of products per page
+        - name: sortType
+          in: query
+          schema:
+            type: string
+            enum: [desc, asc]
+            default: desc
+          description: Sorting order (ascending or descending)
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [updatedAt, title, price]
+            default: updatedAt
+          description: Field to sort by
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [Pending, Paid, Failed]
+          description: Product status
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search query for products
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Order"
+                  pagination:
+                    $ref: "#/components/schemas/Pagination"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /orders
+                      nextPage:
+                        type: string
+                        example: /api/v1/orders?page=3
+                      prevPage:
+                        type: string
+                        example: /api/v1/orders?page=1
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Order
+      summary: Create an order
+      description: Create a new order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Order"
+      responses:
+        "201":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 201
+                  data:
+                    $ref: "#/components/schemas/Order"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /orders/1
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+  /orders/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: Order ID
+        required: true
+        schema:
+          type: string
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Order
+      summary: Get a single order
+      description: Retrieve details of a single order by its ID
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Order"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /orders/1
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Order
+      summary: Update an order
+      description: Update an existing order by its ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Order"
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Order"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /orders/1
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Order
+      summary: Delete an order
+      description: Delete an existing order by its ID
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Order"
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"
+          
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Users:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: fahim
+        email:
+          type: string
+          example: example@example.com
+        role:
+          type: string
+          example: user
+        updatedAt:
+          type: string
+          example: "2023-01-15T12:30:00"
+        createdAt:
+          type: string
+          example: "2023-01-15T12:30:00"
+      required: [id, name, email, role, updatedAt, createdAt]
+    
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: Product Title
+        avatar:
+          type: string
+          example: https://avatar.com/avatar
+        status:
+          type: string
+          enum: [active, inactive]
+          example: active
+        price:
+          type: number
+          example: 29.99
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2023-01-15T12:30:00Z"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-01-15T12:30:00Z"
+        description:
+          type: string
+          example: Product Description
+        category:
+          type: string
+          example: Electronics
+        tags:
+          type: array
+          items:
+            type: string
+          example: ["electronics", "gadget"]
+      required: [id, title, status, price, updatedAt, createdAt, description, category, tags]
+    
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        userId:
+          type: string
+          example: "123"
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                example: "456"
+              quantity:
+                type: integer
+                example: 2
+        orderInfo:
+          type: object
+          properties:
+            name:
+              type: string
+              example: jack
+            phone:
+              type: string
+              example: 194938493
+            city:
+              type: string
+              example: cityname
+            area:
+              type: string
+              example: areaname
+            address:
+              type: string
+              example: address
+        totalPrice:
+          type: number
+          example: 59.98
+        status:
+          type: string
+          enum: [pending, processing, shipped, delivered, cancelled]
+          example: pending
+        paymentStatus:
+          type: string
+          enum: [Pending, Paid, Failed]
+          example: Pending
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-04-20T08:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-04-20T08:30:00Z"
+      required:
+        - userId
+        - items
+        - totalPrice
+        - status
+        - orderInfo
+        - paymentStatus
+        - createdAt
+        - updatedAt
+    
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 2
+        limit:
+          type: integer
+          example: 10
+        nextPage:
+          type: integer
+          example: 3
+        prevPage:
+          type: integer
+          example: 1
+        totalPage:
+          type: integer
+          example: 5
+        totalItem:
+          type: integer
+          example: 100
+      required: [page, limit, totalPage, totalItem]
+  
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        userId:
+          type: string
+          example: "123"
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              product:
+                $ref: "#/components/schemas/Product"
+              quantity:
+                type: integer
+                example: 2
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-04-20T08:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-04-20T08:30:00Z"
+      required:
+        - id
+        - userId
+        - products
+        - createdAt
+        - updatedAt
+        
+  responses:
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 400
+              error:
+                type: string
+                example: Bad request
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: email
+                    message:
+                      type: string
+                      example: Invalid email
+
+            required: [code, error]
+
+    "401":
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 401
+              error:
+                type: string
+                example: Unauthorized, please signin and try again
+            required: [code, error]
+
+    "404":
+      description: Not found data
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 404
+              error:
+                type: string
+                example: Not found
+            required: [code, error]
+
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 500
+              error:
+                type: string
+                example: Server error
+            required: [code, error]
