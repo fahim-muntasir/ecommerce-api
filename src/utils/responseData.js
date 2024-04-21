@@ -4,7 +4,7 @@ const transfromData = ({ items = [], selection = [], path = "/" }) => {
   }
 
   if (selection.length === 0) {
-    return items.map((item) => ({ ...item, links: `${path}/${item._id}` }));
+    return items.map((item) => ({ ...item, links: `${path}/${item.id}` }));
   }
 
   return items.map((item) => {
@@ -12,7 +12,7 @@ const transfromData = ({ items = [], selection = [], path = "/" }) => {
     selection.forEach((key) => {
       result[key] = item[key];
     });
-    result.links = `${path}/${item._id}`;
+    result.links = `${path}/${item.id}`;
     return result;
   });
 };

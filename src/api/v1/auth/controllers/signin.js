@@ -22,12 +22,12 @@ const signin = async (req, res, next) => {
       throw authenticateError("Invalid credentials!");
     }
 
-    if (password !== user.rows[0].password) {
+    if (password !== user.password) {
       throw authenticateError("Invalid credentials!");
     }
 
     const payload = getTransfromSingleData({
-      item: user.rows[0],
+      item: user,
       selection: ["id", "name", "email", "role"],
     });
 
@@ -41,13 +41,14 @@ const signin = async (req, res, next) => {
         token,
       },
       links: {
-        self: `/users/${user.rows[0].id}`,
+        self: `/users/${user.id}`,
       },
     };
 
     // send final response
     res.status(200).json(response);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

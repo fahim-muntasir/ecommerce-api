@@ -141,9 +141,6 @@ paths:
                       prevPage:
                         type: string
                         example: /api/v1/users?page=1
-                      articles:
-                        type: string
-                        example: /api/v1/atricles
                     required: [self]
         "401":
           $ref: "#/components/responses/401"
