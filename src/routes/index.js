@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-// controller import 
+// controller import
 const userController = require("../api/v1/user");
 const productController = require("../api/v1/product");
 const orderController = require("../api/v1/order");
@@ -18,7 +18,6 @@ router.get("/health", (_req, res) => {
     health: "Ok",
   });
 });
-
 
 // ======== api/v1 auth route start ========
 router.route("/v1/auth/signin").post(authController.signin);
@@ -55,7 +54,12 @@ router
     userController.deleteItem
   );
 
-router.get("/v1/users/:id/orders", () => {});
+router.get(
+  "/v1/users/:id/orders",
+  authMiddleware,
+  authorizeMiddleware(["admin", "user"]),
+  orderController.findAllItemsByUserId
+);
 // ======== api/v1 user route end ========
 
 // ======== api/v1 product route start ========

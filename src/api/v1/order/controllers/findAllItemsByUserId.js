@@ -6,6 +6,8 @@ const {
 const { transfromData } = require("../../../../utils/responseData");
 
 const findAllItems = async (req, res, next) => {
+  const { id } = req.params;
+
   const page = +req.query.page || 1;
   const limit = +req.query.limit || 10;
   const sortType = req.query.sortType || "desc";
@@ -15,7 +17,8 @@ const findAllItems = async (req, res, next) => {
   const paymentstatus = req.query.paymentStatus || "";
 
   try {
-    const { data, totalItems } = await orderService.findAllItems({
+    const { data, totalItems } = await orderService.findAllItemsByUserId({
+      userId: id,
       page,
       limit,
       sortType,

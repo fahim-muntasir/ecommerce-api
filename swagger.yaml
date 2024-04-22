@@ -356,7 +356,7 @@ paths:
           in: query
           schema:
             type: integer
-            example: 2
+            example: 1
             default: 1
           description: Page number for pagination
         - name: limit
@@ -516,7 +516,7 @@ paths:
           in: query
           schema:
             type: integer
-            example: 2
+            example: 1
             default: 1
           description: Page number for pagination
         - name: limit
@@ -537,20 +537,26 @@ paths:
           in: query
           schema:
             type: string
-            enum: [updatedAt, title, price]
-            default: updatedAt
+            enum: [updatedat, createdat]
+            default: updatedat
           description: Field to sort by
+        - name: paymentStatus
+          in: query
+          schema:
+            type: string
+            enum: [pending, paid, failed]
+          description: Order payment status
         - name: status
           in: query
           schema:
             type: string
-            enum: [Pending, Paid, Failed]
-          description: Product status
-        - name: search
-          in: query
-          schema:
-            type: string
-          description: Search query for products
+            enum: [pending, processing, shipped, delivered, cancelled]
+          description: Order status
+        # - name: search
+        #   in: query
+        #   schema:
+        #     type: string
+        #   description: Search query for products
       responses:
         "200":
           description: Success response
@@ -945,7 +951,7 @@ paths:
           in: query
           schema:
             type: integer
-            example: 2
+            example: 1
             default: 1
           description: Page number for pagination
         - name: limit
@@ -966,20 +972,26 @@ paths:
           in: query
           schema:
             type: string
-            enum: [updatedAt, title, price]
-            default: updatedAt
+            enum: [updatedat, createdat]
+            default: updatedat
           description: Field to sort by
+        - name: paymentStatus
+          in: query
+          schema:
+            type: string
+            enum: [pending, paid, failed]
+          description: Order payment status
         - name: status
           in: query
           schema:
             type: string
-            enum: [Pending, Paid, Failed]
-          description: Product status
-        - name: search
-          in: query
-          schema:
-            type: string
-          description: Search query for products
+            enum: [pending, processing, shipped, delivered, cancelled]
+          description: Order status
+        # - name: search
+        #   in: query
+        #   schema:
+        #     type: string
+        #   description: Search query for products
       responses:
         "200":
           description: Success response
@@ -1039,6 +1051,9 @@ paths:
                       quantity:
                         type: integer
                         example: 2
+                      price:
+                        type: integer
+                        example: 50.99
                 orderInfo:
                   type: object
                   properties:
@@ -1057,20 +1072,8 @@ paths:
                     address:
                       type: string
                       example: address
-                totalPrice:
-                  type: number
-                  example: 59.98
-                status:
-                  type: string
-                  enum: [pending, processing, shipped, delivered, cancelled]
-                  default: pending
-                paymentStatus:
-                  type: string
-                  enum: [Pending, Paid, Failed]
-                  default: Pending
               required:
                 - items
-                - totalPrice
                 - orderInfo
       responses:
         "201":
@@ -1148,7 +1151,51 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Order"
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      product:
+                        type: string
+                        example: "456"
+                      quantity:
+                        type: integer
+                        example: 2
+                      price:
+                        type: integer
+                        example: 50.99
+                orderInfo:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: jack
+                    phone:
+                      type: string
+                      example: 194938493
+                    city:
+                      type: string
+                      example: cityname
+                    area:
+                      type: string
+                      example: areaname
+                    address:
+                      type: string
+                      example: address
+                totalPrice:
+                  type: number
+                  example: 59.98
+                status:
+                  type: string
+                  enum: [pending, processing, shipped, delivered, cancelled]
+                  example: pending
+                paymentStatus:
+                  type: string
+                  enum: [pending, paid, failed]
+                  example: Pending
       responses:
         "200":
           description: Success response
@@ -1294,6 +1341,9 @@ components:
               quantity:
                 type: integer
                 example: 2
+              price:
+                type: integer
+                example: 50.99
         orderInfo:
           type: object
           properties:
