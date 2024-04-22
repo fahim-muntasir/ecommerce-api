@@ -1,4 +1,4 @@
-const user = require("../../../../lib/user");
+const productService = require("../../../../lib/product");
 const {
   paginationGenerate,
   generatePaginationLinks,
@@ -10,13 +10,17 @@ const findAllItems = async (req, res, next) => {
   const limit = +req.query.limit || 10;
   const sortType = req.query.sortType || "desc";
   const sortBy = req.query.sortBy || "createdat";
+  const searchQuery = req.query.search || "";
+  const status = req.query.status || "";
 
   try {
-    const { data, totalItems } = await user.findAllItems({
+    const { data, totalItems } = await productService.findAllItems({
       page,
       limit,
       sortType,
       sortBy,
+      searchQuery,
+      status
     });
 
     const { pagination, totalPage } = paginationGenerate({
@@ -35,16 +39,27 @@ const findAllItems = async (req, res, next) => {
     });
 
     // transfrom user data for response
-    const users = transfromData({
+    const products = transfromData({
       items: data,
-      selection: ["_id", "name", "email", "role", "updatedAt", "createdAt"],
+      selection: [
+        "id",
+        "title",
+        "avatar",
+        "status",
+        "price",
+        "description",
+        "category",
+        "tags",
+        "updatedat",
+        "createdat",
+      ],
       path: req.baseUrl + req.path,
     });
 
     // final response
     const response = {
       code: 200,
-      data: users,
+      data: products,
       pagination,
       links,
     };
@@ -52,6 +67,7 @@ const findAllItems = async (req, res, next) => {
     // send final response
     res.status(200).json(response);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

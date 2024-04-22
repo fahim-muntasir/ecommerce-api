@@ -490,6 +490,8 @@ paths:
                         type: string
                         example: /products/1/tags
                     required: [self, category, tags]
+        "400":
+          $ref: "#/components/responses/400"
         "401":
           $ref: "#/components/responses/401"
         "500":
@@ -652,10 +654,9 @@ paths:
                 title:
                   type: string
                   example: Updated Product Title
-                status:
+                avatar:
                   type: string
-                  enum: [active, inactive]
-                  example: active
+                  example: https://avatar.com/avatar
                 price:
                   type: number
                   example: 39.99
@@ -1025,7 +1026,52 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Order"
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      product:
+                        type: string
+                        example: "456"
+                      quantity:
+                        type: integer
+                        example: 2
+                orderInfo:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: jack
+                    phone:
+                      type: string
+                      example: 194938493
+                    city:
+                      type: string
+                      example: cityname
+                    area:
+                      type: string
+                      example: areaname
+                    address:
+                      type: string
+                      example: address
+                totalPrice:
+                  type: number
+                  example: 59.98
+                status:
+                  type: string
+                  enum: [pending, processing, shipped, delivered, cancelled]
+                  default: pending
+                paymentStatus:
+                  type: string
+                  enum: [Pending, Paid, Failed]
+                  default: Pending
+              required:
+                - items
+                - totalPrice
+                - orderInfo
       responses:
         "201":
           description: Success response
@@ -1234,7 +1280,7 @@ components:
         id:
           type: string
           example: "1"
-        userId:
+        customer:
           type: string
           example: "123"
         items:
@@ -1242,7 +1288,7 @@ components:
           items:
             type: object
             properties:
-              productId:
+              product:
                 type: string
                 example: "456"
               quantity:
@@ -1286,7 +1332,7 @@ components:
           format: date-time
           example: "2024-04-20T08:30:00Z"
       required:
-        - userId
+        - customer
         - items
         - totalPrice
         - status
@@ -1324,7 +1370,7 @@ components:
         id:
           type: string
           example: "1"
-        userId:
+        customer:
           type: string
           example: "123"
         items:
@@ -1347,7 +1393,7 @@ components:
           example: "2024-04-20T08:30:00Z"
       required:
         - id
-        - userId
+        - customer
         - products
         - createdAt
         - updatedAt
