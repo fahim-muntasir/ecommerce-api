@@ -3,11 +3,13 @@ const deleteItem = require("./controllers/deleteItem");
 const findAllItems = require("./controllers/findAllItems");
 const findSingleItem = require("./controllers/findSingleItem");
 const updateItem = require("./controllers/updateItem");
+const findAllItemsByUserId = require("./controllers/findAllItemsByUserId");
 
 module.exports = {
   create,
   deleteItem,
   findAllItems,
   findSingleItem,
-  updateItem
+  updateItem,
+  findAllItemsByUserId
 }

@@ -47,6 +47,31 @@ const Cart = {
     ORDER BY ${sortBy.toLowerCase()} ${sortOrder}
     `
     ),
+  findAllItemsByUserId: ({ customerId, sortBy, sortOrder }) =>
+    pool.query({
+      text: `
+      SELECT carts.*, 
+             (SELECT jsonb_build_object(
+                'id', products.id,
+                'title', products.title,
+                'avatar', products.avatar,
+                'status', products.status,
+                'price', products.price,
+                'description', products.description,
+                'category', products.category,
+                'tags', products.tags,
+                'createdat', products.createdat,
+                'updatedat', products.updatedat
+              ) AS product
+              FROM products
+              WHERE products.id = carts.product
+             ) AS product
+      FROM carts
+      WHERE customer = $1
+      ORDER BY ${sortBy.toLowerCase()} ${sortOrder}
+    `,
+      values: [customerId],
+    }),
   findAllItems: () => pool.query("SELECT COUNT(*) FROM carts"),
   findItemById: (id) =>
     pool.query(
@@ -96,7 +121,8 @@ const Cart = {
       values: [product, quantity, id],
     }),
   deleteItemById: (id) =>
-    pool.query(`DELETE FROM carts WHERE id = $1 RETURNING *,
+    pool.query(
+      `DELETE FROM carts WHERE id = $1 RETURNING *,
     (SELECT jsonb_build_object(
       'id', products.id,
       'title', products.title,
@@ -110,7 +136,9 @@ const Cart = {
       'updatedat', products.updatedat
     ) AS product
     FROM products
-    WHERE products.id = $1) AS product`, [id]),
+    WHERE products.id = $1) AS product`,
+      [id]
+    ),
 };
 
 module.exports = Cart;

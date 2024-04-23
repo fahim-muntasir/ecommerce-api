@@ -4,6 +4,7 @@ const findAllItems = require("./findAllItems");
 const updateItem = require("./updateItem");
 const deleteItem = require("./deleteItem");
 const checkOwnership = require("./ownership");
+const findAllItemsByUserId = require("./findAllItemsByUserId");
 
 module.exports = {
   create,
@@ -12,5 +13,6 @@ module.exports = {
   existCart,
   updateItem,
   deleteItem,
-  checkOwnership
+  checkOwnership,
+  findAllItemsByUserId
 };

@@ -58,6 +58,7 @@ router.get(
   "/v1/users/:id/orders",
   authMiddleware,
   authorizeMiddleware(["admin", "user"]),
+  ownershipMiddleware("User"),
   orderController.findAllItemsByUserId
 );
 // ======== api/v1 user route end ========
@@ -116,6 +117,14 @@ router
     ownershipMiddleware("Cart"),
     cartController.deleteItem
   );
+
+router.get(
+  "/v1/users/:id/carts",
+  authMiddleware,
+  authorizeMiddleware(["admin", "user"]),
+  ownershipMiddleware("User"),
+  cartController.findAllItemsByUserId
+);
 // ======== api/v1 cart route end =========
 
 // ======== api/v1 order route start ========

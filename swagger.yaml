@@ -591,6 +591,47 @@ paths:
         "500":
           $ref: "#/components/responses/500"
 
+  /users/{id}/carts:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Get all cart items of a single user
+      description: Retrieve a list of a single user all orders
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Cart"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /orders
+        "401":
+          $ref: "#/components/responses/401"
+        "500":
+          $ref: "#/components/responses/500"
+
   /products/{id}:
     get:
       tags:
