@@ -11,6 +11,6 @@ const PORT = process.env.PORT || 4000;
 // server will run after connect db
 dbConnection()
   .then(() => {
-    server.listen(PORT, () => console.log(`Server is running on ${PORT} port`));
+    server.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}/docs`));
   })
   .catch((err) => console.log(err));

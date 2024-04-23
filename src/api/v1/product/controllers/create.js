@@ -63,13 +63,6 @@ const create = async (req, res, next) => {
     // final response
     res.status(201).json(response);
   } catch (err) {
-    if (err.code === "23505") {
-      const error = generateBadRequestError({
-        msg: "Email address is already in use",
-      });
-      return next(error);
-    }
-    console.log(err);
     next(err);
   }
 };

@@ -1,13 +1,13 @@
-const { Product } = require("../../models");
+const { Cart } = require("../../models");
 const { notFoundError } = require("../../utils/error");
 
 const findSingleItem = async (id) => {
   try {
-    const result = await Product.findItemById(id);
+    const result = await Cart.findItemById(id);
 
     // Check if the user was found
     if (result.rows.length === 0) {
-      throw notFoundError("Product not found!");
+      throw notFoundError("Cart not found!");
     }
 
     // Return the user object
@@ -17,9 +17,9 @@ const findSingleItem = async (id) => {
   }
 };
 
-const existProduct = async (id) => {
+const existCart = async (id) => {
   try {
-    const product = await Product.findItemById(id);
+    const product = await Cart.findItemById(id);
 
     if (product.rows.length !== 0) {
       return product.rows[0];
@@ -31,4 +31,4 @@ const existProduct = async (id) => {
   }
 };
 
-module.exports = { findSingleItem, existProduct };
+module.exports = { findSingleItem, existCart };

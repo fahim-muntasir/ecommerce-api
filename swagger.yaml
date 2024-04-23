@@ -766,20 +766,20 @@ paths:
                     type: array
                     items:
                       $ref: "#/components/schemas/Cart"
-                  pagination:
-                    $ref: "#/components/schemas/Pagination"
+                  # pagination:
+                  #   $ref: "#/components/schemas/Pagination"
                   links:
                     type: object
                     properties:
                       self:
                         type: string
                         example: /carts
-                      nextPage:
-                        type: string
-                        example: /api/v1/carts?page=3
-                      prevPage:
-                        type: string
-                        example: /api/v1/carts?page=1
+                      # nextPage:
+                      #   type: string
+                      #   example: /api/v1/carts?page=3
+                      # prevPage:
+                      #   type: string
+                      #   example: /api/v1/carts?page=1
         "401":
           $ref: "#/components/responses/401"
         "500":
@@ -799,10 +799,12 @@ paths:
             schema:
               type: object
               properties:
-                items:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/Product"
+                product:
+                  type: integer
+                  default: 2
+                quantity:
+                  type: integer
+                  example: 1
       responses:
         "201":
           description: Success response
@@ -882,10 +884,12 @@ paths:
             schema:
               type: object
               properties:
-                items:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/Product"
+                product:
+                  type: integer
+                  default: 2
+                quantity:
+                  type: integer
+                  example: 1
       responses:
         "200":
           description: Success response
@@ -1423,30 +1427,25 @@ components:
         customer:
           type: string
           example: "123"
-        items:
-          type: array
-          items:
-            type: object
-            properties:
-              product:
-                $ref: "#/components/schemas/Product"
-              quantity:
-                type: integer
-                example: 2
-        createdAt:
+        product:
+          $ref: "#/components/schemas/Product"
+        quantity:
+          type: integer
+          example: 2
+        createdat:
           type: string
           format: date-time
           example: "2024-04-20T08:00:00Z"
-        updatedAt:
+        updatedat:
           type: string
           format: date-time
           example: "2024-04-20T08:30:00Z"
       required:
         - id
         - customer
-        - products
-        - createdAt
-        - updatedAt
+        - product
+        - createdat
+        - updatedat
         
   responses:
     "400":
