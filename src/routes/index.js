@@ -77,14 +77,12 @@ router
   .get(productController.findSingleItem)
   .patch(
     authMiddleware,
-    authorizeMiddleware(["admin", "user"]),
-    ownershipMiddleware("Article"),
+    authorizeMiddleware(["admin"]),
     productController.updateItem
   )
   .delete(
     authMiddleware,
-    authorizeMiddleware(["admin", "user"]),
-    ownershipMiddleware("Article"),
+    authorizeMiddleware(["admin"]),
     productController.deleteItem
   );
 // ======== api/v1 product route end ========
@@ -92,7 +90,11 @@ router
 // ======== api/v1 cart route start =========
 router
   .route("/v1/carts")
-  .get(cartController.findAllItems)
+  .get(
+    authMiddleware,
+    authorizeMiddleware(["admin"]),
+    cartController.findAllItems
+  )
   .post(
     authMiddleware,
     authorizeMiddleware(["admin", "user"]),
@@ -105,13 +107,13 @@ router
   .patch(
     authMiddleware,
     authorizeMiddleware(["admin", "user"]),
-    ownershipMiddleware("Article"),
+    ownershipMiddleware("Cart"),
     cartController.updateItem
   )
   .delete(
     authMiddleware,
     authorizeMiddleware(["admin", "user"]),
-    ownershipMiddleware("Article"),
+    ownershipMiddleware("Cart"),
     cartController.deleteItem
   );
 // ======== api/v1 cart route end =========
@@ -119,7 +121,11 @@ router
 // ======== api/v1 order route start ========
 router
   .route("/v1/orders")
-  .get(orderController.findAllItems)
+  .get(
+    authMiddleware,
+    authorizeMiddleware(["admin"]),
+    orderController.findAllItems
+  )
   .post(
     authMiddleware,
     authorizeMiddleware(["admin", "user"]),
@@ -131,14 +137,12 @@ router
   .get(orderController.findSingleItem)
   .patch(
     authMiddleware,
-    authorizeMiddleware(["admin", "user"]),
-    ownershipMiddleware("Article"),
+    authorizeMiddleware(["admin"]),
     orderController.updateItem
   )
   .delete(
     authMiddleware,
-    authorizeMiddleware(["admin", "user"]),
-    ownershipMiddleware("Article"),
+    authorizeMiddleware(["admin"]),
     orderController.deleteItem
   );
 // ======== api/v1 order route end ========

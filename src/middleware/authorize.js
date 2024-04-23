@@ -6,7 +6,7 @@ const authorize = (roles = ["admin"]) => (req, _res, next) => {
   }
 
   // Use forbiddenError with a custom message
-  return next(forbiddenError("Insufficient permissions to access this resource."));
+  return next(forbiddenError("You are not allowed to access this route."));
 }
 
 module.exports = authorize;

@@ -3,6 +3,7 @@ const {findSingleItem, existCart}= require("./findSingleItem");
 const findAllItems = require("./findAllItems");
 const updateItem = require("./updateItem");
 const deleteItem = require("./deleteItem");
+const checkOwnership = require("./ownership");
 
 module.exports = {
   create,
@@ -10,5 +11,6 @@ module.exports = {
   findSingleItem,
   existCart,
   updateItem,
-  deleteItem
+  deleteItem,
+  checkOwnership
 };
