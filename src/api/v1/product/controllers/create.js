@@ -4,9 +4,9 @@ const { getTransfromSingleData } = require("../../../../utils/responseData");
 
 const create = async (req, res, next) => {
   try {
-    const { title, avatar, status, price, description, category, tags, discount } =
+    const { title, avatar, price, description, category, tags, discount } =
       req.body;
-    console.log(req.body);
+    const status = req.body?.status || "active";
 
     if (!title || !price || !description || !category) {
       const error = generateBadRequestError({

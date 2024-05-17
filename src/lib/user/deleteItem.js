@@ -1,9 +1,9 @@
-const { User } = require("../../models");
+const { Profile } = require("../../models");
 const { notFoundError } = require("../../utils/error");
 
 const deleteItem = async (id) => {
   try {
-    const result = await User.deleteItemById(id);
+    const result = await Profile.deleteItemById(id);
 
     if (result.rowCount === 0) {
       throw notFoundError("User not found!");

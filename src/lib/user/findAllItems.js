@@ -1,4 +1,4 @@
-const { User } = require("../../models");
+const { Profile } = require("../../models");
 
 const findAllItems = async ({
   page = 1,
@@ -11,10 +11,10 @@ const findAllItems = async ({
     const sortOrder = sortType === "desc" ? "DESC" : "ASC";
 
     // Execute the query with parameters
-    const { rows } = await User.find({ sortBy, sortOrder, limit, offset });
+    const { rows } = await Profile.find({ sortBy, sortOrder, limit, offset });
 
     // Fetch total count of items
-    const { rows: countRows } = await User.findAllItems();
+    const { rows: countRows } = await Profile.findAllItems();
     const totalItems = parseInt(countRows[0].count);
 
     return { data: rows, totalItems };

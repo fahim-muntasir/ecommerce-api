@@ -39,6 +39,7 @@ const signin = async (req, res, next) => {
       code: 200,
       data: {
         token,
+        user: payload
       },
       links: {
         self: `/users/${user.id}`,

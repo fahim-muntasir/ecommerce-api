@@ -1,8 +1,17 @@
-const { User } = require("../../models");
+const { Profile } = require("../../models");
+const validateEmail = require("../../utils/emailvalidate");
+const { generateBadRequestError } = require("../../utils/error");
 
 const create = async ({ name, email, password, role = "user", googleid }) => {
   try {
-    const user = await User.create({
+    if (!validateEmail(email)) {
+      throw generateBadRequestError({
+        properties: { email },
+        msg: "Email is not valid!",
+      });
+    }
+
+    const user = await Profile.create({
       name,
       email,
       password,
