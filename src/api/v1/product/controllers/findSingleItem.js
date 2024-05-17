@@ -3,7 +3,7 @@ const { getTransfromSingleData } = require("../../../../utils/responseData");
 
 const findSingleItem = async (req, res, next) => {
   const { id } = req.params;
-
+console.log(id)
   try {
     // find user by id
     const product = await productService.findSingleItem(id);
@@ -17,6 +17,7 @@ const findSingleItem = async (req, res, next) => {
         "avatar",
         "status",
         "price",
+        "discount",
         "description",
         "category",
         "tags",

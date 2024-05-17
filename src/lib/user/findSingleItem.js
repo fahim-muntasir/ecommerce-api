@@ -33,4 +33,22 @@ const existUser = async (email = "") => {
   }
 };
 
-module.exports = { existUser, findSingleItem };
+const findItemByGoogleId = async (id) => {
+  try {
+    // Query the database for the user with the specified ID
+    const result = await User.findItemByGoogleId(id);
+
+    // Check if the user was found
+    if (result.rows.length === 0) {
+      return null; // Return null if user not found
+    }
+
+    // Return the user object
+    return result.rows[0];
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+module.exports = { existUser, findSingleItem, findItemByGoogleId };

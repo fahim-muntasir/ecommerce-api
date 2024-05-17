@@ -1,5 +1,5 @@
 const { forbiddenError } = require("../utils/error");
-const userServices = require("../lib/user");
+const userServices = require("../lib/profile");
 const cartServices = require("../lib/cart");
 
 const ownership = (model) => async (req, _res, next) => {

@@ -47,6 +47,7 @@ const findAllItems = async (req, res, next) => {
         "avatar",
         "status",
         "price",
+        "discount",
         "description",
         "category",
         "tags",

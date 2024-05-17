@@ -6,7 +6,7 @@ const { getTransfromSingleData } = require("../../../../utils/responseData");
 const create = async (req, res, next) => {
   try {
     const { product, quantity } = req.body;
-
+    const customer_id = req.user.id;
 
     if (!product || !quantity) {
       const error = generateBadRequestError({
@@ -20,17 +20,32 @@ const create = async (req, res, next) => {
 
     if (!isExistProduct) {
       const error = generateBadRequestError({
-        msg: "Product id isn't valid!"
+        msg: "Product id isn't valid!",
       });
       next(error);
     }
 
-    // Insert Product into the database
-    const newCartItem = await cartService.create({
-      customer: req?.user.id,
-      product,
-      quantity
+    const isExistUserAndProductCart = await cartService.isExistUserCart({
+      customerId: customer_id,
+      productId: product,
     });
+
+    let newCartItem;
+
+    if (!isExistUserAndProductCart) {
+      // Insert Product into the database
+      newCartItem = await cartService.create({
+        customer: customer_id,
+        product,
+        quantity,
+      });
+    }else{
+      newCartItem = await cartService.updateQuantity({
+        product: isExistUserAndProductCart?.product,
+        id: isExistUserAndProductCart?.id,
+        quantity: isExistUserAndProductCart?.quantity + quantity,
+      });
+    }
 
     // generate the atuale data for the response
     const data = getTransfromSingleData({

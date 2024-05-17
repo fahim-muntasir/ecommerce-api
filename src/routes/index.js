@@ -156,4 +156,13 @@ router
   );
 // ======== api/v1 order route end ========
 
+// route for socialmedia auth
+const {
+  googleAuth,
+  authCallback,
+  googleAuthController
+} = require("../api/v1/auth/controllers/google");
+router.get("/auth/google", googleAuth);
+router.get("/auth/google/callback", authCallback, googleAuthController);
+
 module.exports = router;

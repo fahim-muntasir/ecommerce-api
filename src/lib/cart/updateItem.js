@@ -19,4 +19,20 @@ const updateItem = async ({ data = {}, id }) => {
   }
 };
 
-module.exports = updateItem;
+const updateQuantity = async ({ product, quantity, id }) => {
+  try {
+
+    // update cart
+    const result = await Cart.updateQuantity({product, quantity, id})
+
+    if (result.rowCount === 0) {
+      throw notFoundError("Cart not found!");
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = {updateItem, updateQuantity};

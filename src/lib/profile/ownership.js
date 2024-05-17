@@ -1,15 +1,15 @@
-const { Cart } = require("../../models");
+const { Profile } = require("../../models");
 const { notFoundError } = require("../../utils/error");
 
 const ownership = async ({ resourceId = "", userId = "" }) => {
   try {
-    const cart = await Cart.findItemById(resourceId);
+    const user = await Profile.findById(resourceId);
 
-    if (!cart) {
+    if (!user) {
       throw notFoundError();
     }
 
-    if (cart.rows[0]?.customer === userId) {
+    if (user.rows[0]?.id === userId) {
 
       return true;
     }

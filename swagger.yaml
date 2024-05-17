@@ -442,8 +442,15 @@ paths:
                   type: string
                   example: Product Title
                 avatar:
-                  type: string
-                  example: https://avatar.com/avatar
+                  type: array
+                  items:
+                    type: string
+                  example: 
+                    - https://avatar.com/avatar1
+                    - https://avatar.com/avatar2
+                    - https://avatar.com/avatar3
+                    - https://avatar.com/avatar4
+                    - https://avatar.com/avatar5
                 status:
                   type: string
                   enum: [active, inactive]
@@ -451,6 +458,9 @@ paths:
                 price:
                   type: number
                   example: 29.99
+                discount:
+                  type: number
+                  example: 5.99
                 description:
                   type: string
                   example: Product Description
@@ -1336,8 +1346,15 @@ components:
           type: string
           example: Product Title
         avatar:
-          type: string
-          example: https://avatar.com/avatar
+          type: array
+          items:
+            type: string
+          example: 
+            - https://avatar.com/avatar1
+            - https://avatar.com/avatar2
+            - https://avatar.com/avatar3
+            - https://avatar.com/avatar4
+            - https://avatar.com/avatar5
         status:
           type: string
           enum: [active, inactive]
@@ -1345,6 +1362,9 @@ components:
         price:
           type: number
           example: 29.99
+        discount:
+          type: number
+          example: 5.99
         updatedAt:
           type: string
           format: date-time

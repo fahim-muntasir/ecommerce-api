@@ -31,4 +31,18 @@ const existCart = async (id) => {
   }
 };
 
-module.exports = { findSingleItem, existCart };
+const isExistUserCart = async ({customerId, productId}) => {
+  try {
+    const carts = await Cart.findItemByUserIdAndProductId({customerId, productId});
+
+    if (carts.rows.length !== 0) {
+      return carts.rows[0];
+    }
+
+    return false;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { findSingleItem, existCart, isExistUserCart };
