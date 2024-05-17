@@ -8,6 +8,8 @@ const Product = {
     ),
   findItemById: (id) =>
     pool.query("SELECT * FROM products WHERE id = $1", [id]),
+  findItemByProductsIds: (productIdsString) =>
+    pool.query(`SELECT * FROM products WHERE id IN (${productIdsString})`),
   deleteItemById: (id) =>
     pool.query("DELETE FROM products WHERE id = $1 RETURNING *", [id]),
 };

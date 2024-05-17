@@ -1,4 +1,5 @@
 const { pool } = require("../../db/dbConnection");
+const { Product } = require("../../models");
 
 const findAllItems = async ({
   page = 1,
@@ -60,4 +61,16 @@ const findAllItems = async ({
   }
 };
 
-module.exports = findAllItems;
+const findItemsByItemsIds = async (ids) => {
+  const productIdsString = ids.map(id => `'${id}'`).join(',');
+
+  try {
+    const products = await Product.findItemByProductsIds(productIdsString);
+
+    return products.rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = {findAllItems, findItemsByItemsIds};

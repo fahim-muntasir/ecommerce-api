@@ -14,6 +14,7 @@ const Cart = {
          'avatar', products.avatar,
          'status', products.status,
          'price', products.price,
+         'discount', products.discount,
          'description', products.description,
          'category', products.category,
          'tags', products.tags,
@@ -35,6 +36,7 @@ const Cart = {
               'avatar', products.avatar,
               'status', products.status,
               'price', products.price,
+              'discount', products.discount,
               'description', products.description,
               'category', products.category,
               'tags', products.tags,
@@ -57,6 +59,7 @@ const Cart = {
                 'avatar', products.avatar,
                 'status', products.status,
                 'price', products.price,
+                'discount', products.discount,
                 'description', products.description,
                 'category', products.category,
                 'tags', products.tags,
@@ -82,6 +85,7 @@ const Cart = {
         'avatar', products.avatar,
         'status', products.status,
         'price', products.price,
+        'discount', products.discount,
         'description', products.description,
         'category', products.category,
         'tags', products.tags,
@@ -118,6 +122,7 @@ const Cart = {
           'avatar', products.avatar,
           'status', products.status,
           'price', products.price,
+          'discount', products.discount,
           'description', products.description,
           'category', products.category,
           'tags', products.tags,
@@ -144,6 +149,7 @@ const Cart = {
           'avatar', products.avatar,
           'status', products.status,
           'price', products.price,
+          'discount', products.discount,
           'description', products.description,
           'category', products.category,
           'tags', products.tags,
@@ -164,6 +170,7 @@ const Cart = {
       'avatar', products.avatar,
       'status', products.status,
       'price', products.price,
+      'discount', products.discount,
       'description', products.description,
       'category', products.category,
       'tags', products.tags,
@@ -174,6 +181,8 @@ const Cart = {
     WHERE products.id = $1) AS product`,
       [id]
     ),
+  deleteItemByUserId: (id) =>
+    pool.query(`DELETE FROM carts WHERE customer = $1`, [id]),
 };
 
 module.exports = Cart;

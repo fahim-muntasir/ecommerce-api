@@ -4,6 +4,8 @@ const findAllItems = require("./controllers/findAllItems");
 const findSingleItem = require("./controllers/findSingleItem");
 const updateItem = require("./controllers/updateItem");
 const findAllItemsByUserId = require("./controllers/findAllItemsByUserId");
+const checkout = require("./controllers/checkout");
+const webhook = require("./controllers/webhook");
 
 module.exports = {
   create,
@@ -11,5 +13,7 @@ module.exports = {
   findAllItems,
   findSingleItem,
   updateItem, 
-  findAllItemsByUserId
+  findAllItemsByUserId,
+  checkout,
+  webhook
 }

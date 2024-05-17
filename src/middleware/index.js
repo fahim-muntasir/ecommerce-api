@@ -7,9 +7,16 @@ const morgan = require("morgan");
 const swaggerDoc = YAML.load("swagger.yaml");
 
 const middleware = (app) => {
-  app.use(morgan("combined"));
+  // Middleware for /api routes
+  const apiMiddleware = express.Router();
+  apiMiddleware.use(morgan("combined"));
   app.use(cors());
-  app.use(express.json());
+  apiMiddleware.use(express.json());
+
+  // Mount the API middleware on the /api route
+  app.use("/api/v1", apiMiddleware);
+
+  // Serve Swagger documentation at /docs
   app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 };
 

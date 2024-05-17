@@ -1,4 +1,5 @@
-const router = require("express").Router();
+const express = require("express");
+const router = express.Router();
 
 // controller import
 const userController = require("../api/v1/user");
@@ -160,9 +161,17 @@ router
 const {
   googleAuth,
   authCallback,
-  googleAuthController
+  googleAuthController,
 } = require("../api/v1/auth/controllers/google");
 router.get("/auth/google", googleAuth);
 router.get("/auth/google/callback", authCallback, googleAuthController);
+
+// checkout route
+router.post("/v1/checkout", authMiddleware, orderController.checkout);
+// router.post(
+//   "/webhook",
+//   express.raw({ type: "application/json" }),
+//   orderController.webhook
+// );
 
 module.exports = router;
