@@ -1304,6 +1304,57 @@ paths:
         "500":
           $ref: "#/components/responses/500"
           
+  /orders/status/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: Order ID
+        required: true
+        schema:
+          type: string
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Order
+      summary: Update an order status
+      description: Update an existing order status by its ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [pending, processing, shipped, delivered, cancelled]
+                  example: pending
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  data:
+                    $ref: "#/components/schemas/Order"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: /orders/1
+        "401":
+          $ref: "#/components/responses/401"
+        "404":
+          $ref: "#/components/responses/404"
+        "500":
+          $ref: "#/components/responses/500"        
 
 components:
   securitySchemes:
