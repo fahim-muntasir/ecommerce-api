@@ -155,6 +155,13 @@ router
     authorizeMiddleware(["admin"]),
     orderController.deleteItem
   );
+  
+router.patch(
+  "/v1/orders/status/:id",
+  authMiddleware,
+  authorizeMiddleware(["admin"]),
+  orderController.updateItemStatus
+);
 // ======== api/v1 order route end ========
 
 // route for socialmedia auth

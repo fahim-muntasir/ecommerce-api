@@ -72,4 +72,34 @@ const updatePaymentStatus = async ({ paymentStatus = "pending", id }) => {
   }
 };
 
-module.exports = {updateItem, updatePaymentStatus};
+const updateOrderStatus = async ({ status = "pending", id }) => {
+  try {
+    // Construct the SQL UPDATE query to update only the paymentStatus field
+    const query = {
+      text: `
+        UPDATE orders 
+        SET 
+          status = $1
+        WHERE id = $2 
+        RETURNING *
+      `,
+      values: [
+        status, // Set the new paymentStatus value
+        id, // Set the order ID
+      ],
+    };
+
+    // Execute the query
+    const result = await pool.query(query);
+
+    if (result.rowCount === 0) {
+      throw notFoundError("Order not found!");
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = {updateItem, updatePaymentStatus, updateOrderStatus};

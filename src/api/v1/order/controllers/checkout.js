@@ -41,6 +41,9 @@ const checkout = async (req, res) => {
       items: orderedProductItems.map((item) => ({
         product: item.product,
         quantity: item.quantity,
+        discount: item.discount,
+        avatar: item.avatar,
+        title: item.title,
         price: item.price,
       })),
       totalPrice: orderedProductItems.reduce((total, product) => {

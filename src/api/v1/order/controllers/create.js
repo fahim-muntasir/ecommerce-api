@@ -5,7 +5,7 @@ const { getTransfromSingleData } = require("../../../../utils/responseData");
 const create = async (req, res, next) => {
   try {
     const { items: orderItems, orderInfo } = req.body;
-
+    console.log(orderInfo);
     if (
       Object.keys(orderItems).length === 0 ||
       Object.keys(orderInfo).length === 0
@@ -36,10 +36,13 @@ const create = async (req, res, next) => {
       return next(error);
     }
 
-    const items = orderItems.map((item) => {
+    const items = orderItems?.map((item) => {
       return {
         product: item?.product,
         quantity: item?.quantity,
+        discount: item.discount,
+        avatar: item.avatar,
+        title: item.title,
         price: item?.price,
       };
     });

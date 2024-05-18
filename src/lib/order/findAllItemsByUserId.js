@@ -16,26 +16,34 @@ const findAllItems = async ({
 
     // Construct the SQL query
     let query = `
-      SELECT *
-      FROM (
-        SELECT
-          p.*,
-          COUNT(*) OVER() AS total_count,
-          ROW_NUMBER() OVER (ORDER BY ${sortBy.toLowerCase()} ${sortType === 'desc' ? 'DESC' : 'ASC'}) AS row_num
-        FROM orders p
-        WHERE 1=1
+      SELECT orders.*,
+        (SELECT jsonb_build_object(
+          'id', profile.id,
+          'name', profile.name,
+          'email', profile.email
+        )
+        FROM profile
+        WHERE profile.id = orders.customer) AS customer,
+        COUNT(*) OVER() AS total_count
+      FROM orders
+      WHERE 1=1
     `;
 
     const queryParams = [];
 
     // Add conditions for search query, status, and payment status
+    if (searchQuery) {
+      query += `
+        AND (title ILIKE $${queryParams.length + 1} OR description ILIKE $${queryParams.length + 1})
+      `;
+      queryParams.push(`%${searchQuery}%`);
+    }
     if (status) {
       query += `
         AND status = $${queryParams.length + 1}
       `;
       queryParams.push(status);
     }
-
     if (paymentstatus) {
       query += `
         AND paymentstatus = $${queryParams.length + 1}
@@ -51,10 +59,10 @@ const findAllItems = async ({
       queryParams.push(userId);
     }
 
-    // Close the subquery
+    // Add sorting, pagination and close the main query
     query += `
-      ) AS subquery
-      WHERE row_num > $${queryParams.length + 1}
+      ORDER BY ${sortBy} ${sortType.toUpperCase()}
+      OFFSET $${queryParams.length + 1}
       LIMIT $${queryParams.length + 2}
     `;
     queryParams.push(offset, limit);
@@ -71,4 +79,4 @@ const findAllItems = async ({
   }
 };
 
-module.exports = findAllItems;
+module.exports = findAllItems
